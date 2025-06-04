@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listings | GetNesty</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9f7f3;
+      color: #2e2e2e;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      padding: 1.5rem 2rem;
+      background-color: #f9f7f3;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.75rem;
+    }
+    .listings {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      padding: 1.5rem;
+    }
+    .card h2 {
+      margin: 0 0 0.5rem;
+    }
+    .card p {
+      margin: 0.25rem 0;
+    }
+    .card .host {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Available Listings</h1>
+  </header>
+  <div class="listings" id="listings"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://cltsidymieorrgiwjuqm.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsdHNpZHltaWVvcnJnaXdqdXFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxMDY3MjQsImV4cCI6MjA2MzY4MjcyNH0.soMMnW3-nRVH5onJPOETxRApevXuVDLDHbaT9_PS-Eo';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function fetchListings() {
+      const { data, error } = await supabase.from('listings').select('*');
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      const listingsContainer = document.getElementById('listings');
+      listingsContainer.innerHTML = '';
+      data.forEach(listing => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h2>\${listing.title}</h2>
+          <p><strong>Location:</strong> \${listing.location}</p>
+          <p><strong>Price:</strong> \$\${listing.price}/month</p>
+          <p><strong>Beds:</strong> \${listing.beds}</p>
+          <p><strong>Description:</strong> \${listing.description}</p>
+          <p><strong>Amenities:</strong> \${listing.amenities}</p>
+          <div class="host">
+            <p><strong>Host:</strong> \${listing.host_name}</p>
+            <p>\${listing.host_bio}</p>
+          </div>
+        `;
+        listingsContainer.appendChild(card);
+      });
+    }
+
+    fetchListings();
+  </script>
+</body>
+</html>
