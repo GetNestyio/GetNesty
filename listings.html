@@ -63,7 +63,7 @@
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function fetchListings() {
-      const { data, error } = await supabase.from('listings').select('*');
+     const { data, error } = await supabase.from("Listings").select("*");
       if (error) {
         console.error(error);
         return;
@@ -94,3 +94,4 @@
   </script>
 </body>
 </html>
+Fix: match table name casing
