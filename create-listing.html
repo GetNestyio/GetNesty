@@ -2,154 +2,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Create Listing | GetNesty</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
       background-color: #f9f7f3;
-      color: #2e2e2e;
-    }
-    header {
-      padding: 1.5rem 2rem;
-      background-color: #f9f7f3;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.75rem;
-    }
-    .form-wrapper {
-      max-width: 700px;
-      margin: 2rem auto;
       padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      color: #333;
     }
     form {
-      display: grid;
-      gap: 1.5rem;
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
     label {
       display: block;
+      margin: 1rem 0 0.3rem;
       font-weight: 600;
-      margin-bottom: 0.5rem;
     }
-    input,
-    textarea,
-    select {
-      font-family: 'Inter', sans-serif;
+    input, textarea {
       width: 100%;
-      padding: 0.75rem;
-      font-size: 1rem;
+      padding: 0.6rem;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      border-radius: 8px;
-      background: #fefefe;
     }
     button {
+      margin-top: 1.5rem;
       padding: 0.75rem 1.5rem;
-      font-size: 1rem;
       background-color: #405c52;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
+      font-weight: 600;
       cursor: pointer;
-    }
-    button:hover {
-      background-color: #2e423b;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Create a Listing</h1>
-  </header>
+  <form id="listingForm">
+    <h2>Create a New Listing</h2>
+    <label>Title</label>
+    <input type="text" name="title" required />
+    <label>Location</label>
+    <input type="text" name="location" required />
+    <label>Price (per month)</label>
+    <input type="number" name="price" required />
+    <label>Type</label>
+    <input type="text" name="type" required />
+    <label>Number of Beds</label>
+    <input type="text" name="beds" required />
+    <label>Amenities</label>
+    <textarea name="amenities"></textarea>
+    <label>Host Name</label>
+    <input type="text" name="host_name" required />
+    <label>Host Bio</label>
+    <textarea name="host_bio"></textarea>
+    <label>Upload Image</label>
+    <input type="file" id="imageInput" accept="image/*" />
+    <button type="submit">Submit Listing</button>
+  </form>
 
-  <div class="form-wrapper">
-    <form>
-      <div>
-        <label>Property Title</label>
-        <input type="text" id="title" name="title" placeholder="Cozy Mid-Century Flat in Austin">
-      </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://cltsidymieorrgiwjuqm.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsdHNpZHltaWVvcnJnaXdqdXFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxMDY3MjQsImV4cCI6MjA2MzY4MjcyNH0.soMMnW3-nRVH5onJPOETxRApevXuVDLDHbaT9_PS-Eo';
 
-      <div>
-        <label>Location</label>
-        <input type="text" id="location" name="location" placeholder="Austin, TX">
-      </div>
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      <div>
-        <label>Price per Month</label>
-        <input type="number" id="price" name="price" placeholder="$2500">
-      </div>
+    document.getElementById('listingForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      const imageFile = document.getElementById('imageInput').files[0];
+      let imageUrl = '';
 
-      <div>
-        <label>Property Type</label>
-        <input type="text" id="type" name="type" placeholder="Private Studio, Apartment, House, etc.">
-      </div>
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${Date.now()}.${fileExt}`;
+        const { data, error } = await supabase.storage.from('listing-images').upload(fileName, imageFile);
 
-      <div>
-        <label>Number and Size of Beds</label>
-        <input type="text" id="beds" name="beds" placeholder="1 Queen Bed">
-      </div>
+        if (error) {
+          alert('Image upload failed!');
+          return;
+        }
 
-      <div>
-        <label>Description</label>
-        <textarea id="description" name="description" rows="4" placeholder="Describe the space, the vibe, and who it's ideal for."></textarea>
-      </div>
+        const { data: publicUrlData } = supabase.storage.from('listing-images').getPublicUrl(fileName);
+        imageUrl = publicUrlData.publicUrl;
+      }
 
-      <div>
-        <label>Amenities</label>
-        <textarea id="amenities" name="amenities" rows="2" placeholder="Wi-Fi, Laundry, Parking, etc."></textarea>
-      </div>
+      const { error: insertError } = await supabase.from('Listings').insert({
+        title: formData.get('title'),
+        location: formData.get('location'),
+        price: formData.get('price'),
+        type: formData.get('type'),
+        beds: formData.get('beds'),
+        amenities: formData.get('amenities'),
+        host_name: formData.get('host_name'),
+        host_bio: formData.get('host_bio'),
+        image_url: imageUrl,
+      });
 
-      <div>
-        <label>Host Name</label>
-        <input type="text" id="hostName" name="hostName" placeholder="Jamie R.">
-      </div>
-
-      <div>
-        <label>Host Bio</label>
-        <textarea id="hostBio" name="hostBio" rows="2" placeholder="I love hosting travel nurses and helping them feel at home."></textarea>
-      </div>
-
-      <button type="submit">Submit Listing</button>
-    </form>
-  </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://cltsidymieorrgiwjuqm.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsdHNpZHltaWVvcnJnaXdqdXFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxMDY3MjQsImV4cCI6MjA2MzY4MjcyNH0.soMMnW3-nRVH5onJPOETxRApevXuVDLDHbaT9_PS-Eo';
-
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  document.querySelector("form").addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const formData = {
-      title: document.getElementById("title").value,
-      location: document.getElementById("location").value,
-      price: parseFloat(document.getElementById("price").value),
-      type: document.getElementById("type").value,
-      beds: document.getElementById("beds").value,
-      description: document.getElementById("description").value,
-      amenities: document.getElementById("amenities").value,
-      host_name: document.getElementById("hostName").value,
-      host_bio: document.getElementById("hostBio").value
-    };
-
-    const { data, error } = await supabase.from("listings").insert([formData]);
-
-    if (error) {
-      alert("Error submitting listing: " + error.message);
-    } else {
-      alert("Listing submitted successfully!");
-      e.target.reset();
-    }
-  });
-</script>
+      if (insertError) {
+        alert('Error submitting listing');
+      } else {
+        alert('Listing submitted!');
+        window.location.href = 'listings.html';
+      }
+    });
+  </script>
 </body>
 </html>
