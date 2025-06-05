@@ -49,6 +49,20 @@
     .listing-card strong {
       font-weight: 600;
     }
+    .listing-card a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      text-decoration: none;
+      color: #2e5d47;
+      font-weight: 600;
+    }
+    .listing-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -80,6 +94,7 @@
       listings.forEach(listing => {
         listingContainer.innerHTML += `
           <div class="listing-card">
+            ${listing.image_url ? `<img src="${listing.image_url}" alt="Property image" class="listing-image">` : ''}
             <h3>${listing.title}</h3>
             <p><strong>Location:</strong> ${listing.location}</p>
             <p><strong>Price:</strong> $${listing.price}/month</p>
@@ -88,6 +103,7 @@
             <p><strong>Amenities:</strong> ${listing.amenities}</p>
             <p><strong>Host:</strong> ${listing.host_name}</p>
             <p>${listing.host_bio}</p>
+            <a href="listing-detail.html?id=${listing.id}">View details →</a>
           </div>
         `;
       });
