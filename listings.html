@@ -3,49 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Listings | GetNesty</title>
+  <title>Available Listings | GetNesty</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: #f9f7f3;
-      color: #2e2e2e;
+      background-color: #f9f7f3;
       margin: 0;
       padding: 0;
+      color: #2e2e2e;
     }
     header {
-      padding: 1.5rem 2rem;
       background-color: #f9f7f3;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     header h1 {
       margin: 0;
       font-size: 1.75rem;
     }
-    .listings {
+    .listings-container {
+      max-width: 1000px;
+      margin: 2rem auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2rem;
-      padding: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding: 0 1rem;
     }
-    .card {
-      background: white;
+    .listing-card {
+      background-color: white;
       border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
       padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     }
-    .card h2 {
-      margin: 0 0 0.5rem;
+    .listing-card h3 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: #405c52;
     }
-    .card p {
-      margin: 0.25rem 0;
-    }
-    .card .host {
-      margin-top: 1rem;
+    .listing-card p {
+      margin: 0.4rem 0;
       font-size: 0.95rem;
-      color: #555;
+      line-height: 1.4;
+    }
+    .listing-card strong {
+      font-weight: 600;
     }
   </style>
 </head>
@@ -53,7 +55,9 @@
   <header>
     <h1>Available Listings</h1>
   </header>
-  <div class="listings" id="listings"></div>
+  <div class="listings-container" id="listingContainer">
+    <!-- Listings will load here -->
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -63,30 +67,29 @@
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function fetchListings() {
-     const { data, error } = await supabase.from("Listings").select("*");
+      const { data: listings, error } = await supabase.from("Listings").select("*");
+
+      const listingContainer = document.getElementById("listingContainer");
+      listingContainer.innerHTML = "";
+
       if (error) {
-        console.error(error);
+        listingContainer.innerHTML = `<p>Error loading listings: ${error.message}</p>`;
         return;
       }
 
-      const listingsContainer = document.getElementById('listings');
-      listingsContainer.innerHTML = '';
-      data.forEach(listing => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <h2>\${listing.title}</h2>
-          <p><strong>Location:</strong> \${listing.location}</p>
-          <p><strong>Price:</strong> \$\${listing.price}/month</p>
-          <p><strong>Beds:</strong> \${listing.beds}</p>
-          <p><strong>Description:</strong> \${listing.description}</p>
-          <p><strong>Amenities:</strong> \${listing.amenities}</p>
-          <div class="host">
-            <p><strong>Host:</strong> \${listing.host_name}</p>
-            <p>\${listing.host_bio}</p>
+      listings.forEach(listing => {
+        listingContainer.innerHTML += `
+          <div class="listing-card">
+            <h3>${listing.title}</h3>
+            <p><strong>Location:</strong> ${listing.location}</p>
+            <p><strong>Price:</strong> $${listing.price}/month</p>
+            <p><strong>Type:</strong> ${listing.type}</p>
+            <p><strong>Beds:</strong> ${listing.beds}</p>
+            <p><strong>Amenities:</strong> ${listing.amenities}</p>
+            <p><strong>Host:</strong> ${listing.host_name}</p>
+            <p>${listing.host_bio}</p>
           </div>
         `;
-        listingsContainer.appendChild(card);
       });
     }
 
@@ -94,4 +97,3 @@
   </script>
 </body>
 </html>
-Fix: match table name casing
