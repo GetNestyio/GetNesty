@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Listing Detail | GetNesty</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Listing Details | GetNesty</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
@@ -22,33 +22,28 @@
       margin: 0;
       font-size: 1.75rem;
     }
-    .container {
+    .detail-container {
       max-width: 800px;
       margin: 2rem auto;
+      padding: 1.5rem;
       background: white;
       border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
-    .container h2 {
+    .detail-container h2 {
       margin-top: 0;
+      font-size: 1.5rem;
       color: #405c52;
     }
-    .container p {
+    .detail-container p {
       font-size: 1rem;
       line-height: 1.6;
-      margin: 0.5rem 0;
     }
-    strong {
-      font-weight: 600;
-    }
-    .back-link {
-      display: block;
-      margin: 2rem auto;
-      text-align: center;
-      text-decoration: none;
-      color: #2e5d47;
-      font-weight: 600;
+    .detail-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 1rem;
     }
   </style>
 </head>
@@ -56,10 +51,9 @@
   <header>
     <h1>Listing Details</h1>
   </header>
-  <div class="container" id="listingDetail">
-    <!-- Listing details will go here -->
+  <div class="detail-container" id="listingDetail">
+    <!-- Listing details will appear here -->
   </div>
-  <a class="back-link" href="listings.html">← Back to Listings</a>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -68,19 +62,20 @@
 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const listingId = urlParams.get('id');
-
     async function fetchListingDetail() {
-      const { data, error } = await supabase.from("Listings").select("*").eq("id", listingId).single();
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      const { data, error } = await supabase.from("Listings").select("*").eq("id", id).single();
 
-      const detailContainer = document.getElementById("listingDetail");
-      if (error || !data) {
-        detailContainer.innerHTML = `<p>Error loading listing details.</p>`;
+      const container = document.getElementById("listingDetail");
+
+      if (error) {
+        container.innerHTML = `<p>Error loading listing: ${error.message}</p>`;
         return;
       }
 
-      detailContainer.innerHTML = `
+      container.innerHTML = `
+        ${data.image_url ? `<img src="${data.image_url}" alt="Property image">` : ''}
         <h2>${data.title}</h2>
         <p><strong>Location:</strong> ${data.location}</p>
         <p><strong>Price:</strong> $${data.price}/month</p>
@@ -89,7 +84,6 @@
         <p><strong>Amenities:</strong> ${data.amenities}</p>
         <p><strong>Host:</strong> ${data.host_name}</p>
         <p>${data.host_bio}</p>
-        <p><strong>Description:</strong> ${data.description}</p>
       `;
     }
 
