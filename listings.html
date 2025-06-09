@@ -1,56 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GetNesty Listings</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Listings — GetNesty</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --cream: #f9f7f3;
+      --green-light: #cfe3dc;
+      --green-dark: #405c52;
+      --text-dark: #2e2e2e;
+    }
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f9f7f3;
+      background-color: var(--cream);
+      color: var(--text-dark);
       margin: 0;
       padding: 0;
-      color: #2e2e2e;
     }
     header {
-      padding: 1rem 2rem;
-      background-color: #f9f7f3;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 2rem 5%;
+      background-color: var(--cream);
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
     header h1 {
-      margin: 0;
-    }
-    .hero {
-      background-color: #a4c3b2;
-      padding: 3rem 2rem;
-      text-align: center;
-      color: white;
-    }
-    .hero h2 {
       font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-    .hero p {
-      font-size: 1.1rem;
       margin: 0;
+      color: var(--green-dark);
     }
     .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
+      background-color: var(--green-light);
       padding: 1rem 2rem;
-      background: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-radius: 8px;
+      margin: 1rem;
     }
-    .filters input, .filters select {
+    .filters input,
+    .filters select {
       padding: 0.5rem;
       border: 1px solid #ccc;
       border-radius: 6px;
       font-family: 'Inter', sans-serif;
-    }
-    .checkbox-group label {
-      margin-right: 10px;
+      margin: 0.25rem;
     }
     .listings {
       display: grid;
@@ -72,52 +65,32 @@
     .card h2 {
       margin: 0 0 0.5rem;
       font-size: 1.2rem;
-      color: #405c52;
+      color: var(--green-dark);
     }
-    .form-label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-    .filter-group {
-      display: flex;
-      flex-direction: column;
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      color: #777;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Available Listings</h1>
+    <h1>GetNesty</h1>
   </header>
+
   <div class="filters">
-    <div class="filter-group">
-      <label class="form-label" for="locationFilter">Location</label>
-      <input type="text" id="locationFilter" placeholder="Search by location" />
-    </div>
-    <div class="filter-group">
-      <label class="form-label" for="minPrice">Min Price</label>
-      <input type="number" id="minPrice" placeholder="Min price" />
-    </div>
-    <div class="filter-group">
-      <label class="form-label" for="maxPrice">Max Price</label>
-      <input type="number" id="maxPrice" placeholder="Max price" />
-    </div>
-    <div class="filter-group">
-      <label class="form-label" for="startDate">Move-in Date</label>
-      <input type="date" id="startDate" />
-    </div>
-    <div class="filter-group">
-      <label class="form-label" for="endDate">Move-out Date</label>
-      <input type="date" id="endDate" />
-    </div>
-    <div class="filter-group">
-      <label class="form-label" for="typeFilter">Unit Type</label>
-      <select id="typeFilter">
-        <option value="">All Types</option>
-        <option value="Private Unit">Private Unit</option>
-        <option value="Shared Unit">Shared Unit</option>
-      </select>
-    </div>
+    <input type="text" id="locationFilter" placeholder="Search by location">
+    <input type="number" id="minPrice" placeholder="Min price">
+    <input type="number" id="maxPrice" placeholder="Max price">
+    <input type="date" id="startDate" placeholder="Move-in Date" title="Move-in Date">
+    <input type="date" id="endDate" placeholder="Move-out Date" title="Move-out Date">
+    <select id="typeFilter">
+      <option value="">All Types</option>
+      <option value="Private unit">Private unit</option>
+      <option value="Shared unit">Shared unit</option>
+    </select>
     <div class="checkbox-group">
       <label><input type="checkbox" value="WiFi" class="amenity"> WiFi</label>
       <label><input type="checkbox" value="Kitchenette" class="amenity"> Kitchenette</label>
@@ -130,10 +103,14 @@
 
   <div class="listings" id="listingsContainer"></div>
 
+  <footer>
+    © 2025 GetNesty. All rights reserved.
+  </footer>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = 'https://cltsidymieorrgiwjuqm.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsdHNpZHltaWVvcnJnaXdqdXFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxMDY3MjQsImV4cCI6MjA2MzY4MjcyNH0.soMMnW3-nRVH5onJPOETxRApevXuVDLDHbaT9_PS-Eo';
+    const SUPABASE_KEY = 'eyJhbGciOiJI...yourKeyHere';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function fetchListings(filters = {}) {
@@ -196,7 +173,4 @@
     fetchListings();
   </script>
 </body>
-  <footer>
-  © 2025 GetNesty. All rights reserved.
-</footer>
 </html>
