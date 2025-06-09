@@ -45,6 +45,10 @@
       font-family: 'Inter', sans-serif;
       margin: 0.25rem;
     }
+    .filters label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
     .listings {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -81,16 +85,28 @@
   </header>
 
   <div class="filters">
+    <label for="locationFilter">Location</label>
     <input type="text" id="locationFilter" placeholder="Search by location">
+
+    <label for="minPrice">Minimum Price</label>
     <input type="number" id="minPrice" placeholder="Min price">
+
+    <label for="maxPrice">Maximum Price</label>
     <input type="number" id="maxPrice" placeholder="Max price">
-    <input type="date" id="startDate" placeholder="Move-in Date" title="Move-in Date">
-    <input type="date" id="endDate" placeholder="Move-out Date" title="Move-out Date">
+
+    <label for="startDate">Move-in Date</label>
+    <input type="date" id="startDate" title="Move-in Date">
+
+    <label for="endDate">Move-out Date</label>
+    <input type="date" id="endDate" title="Move-out Date">
+
+    <label for="typeFilter">Unit Type</label>
     <select id="typeFilter">
       <option value="">All Types</option>
       <option value="Private unit">Private unit</option>
       <option value="Shared unit">Shared unit</option>
     </select>
+
     <div class="checkbox-group">
       <label><input type="checkbox" value="WiFi" class="amenity"> WiFi</label>
       <label><input type="checkbox" value="Kitchenette" class="amenity"> Kitchenette</label>
