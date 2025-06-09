@@ -60,6 +60,15 @@
       font-size: 1.2rem;
       color: #405c52;
     }
+    .form-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+    }
   </style>
 </head>
 <body>
@@ -68,17 +77,34 @@
   </header>
 
   <div class="filters">
-    <input type="text" id="locationFilter" placeholder="Search by location" />
-    <input type="number" id="minPrice" placeholder="Min price" />
-    <input type="number" id="maxPrice" placeholder="Max price" />
-    <input type="date" id="startDate" placeholder="Move-in Date" title="Move-in Date" />
-    <input type="date" id="endDate" placeholder="Move-out Date" title="Move-out Date" />
-    <select id="typeFilter">
-      <option value="">All Types</option>
-      <option value="Studio">Studio</option>
-      <option value="Apartment">Apartment</option>
-      <option value="House">House</option>
-    </select>
+    <div class="filter-group">
+      <label class="form-label" for="locationFilter">Location</label>
+      <input type="text" id="locationFilter" placeholder="Search by location" />
+    </div>
+    <div class="filter-group">
+      <label class="form-label" for="minPrice">Min Price</label>
+      <input type="number" id="minPrice" placeholder="Min price" />
+    </div>
+    <div class="filter-group">
+      <label class="form-label" for="maxPrice">Max Price</label>
+      <input type="number" id="maxPrice" placeholder="Max price" />
+    </div>
+    <div class="filter-group">
+      <label class="form-label" for="startDate">Move-in Date</label>
+      <input type="date" id="startDate" />
+    </div>
+    <div class="filter-group">
+      <label class="form-label" for="endDate">Move-out Date</label>
+      <input type="date" id="endDate" />
+    </div>
+    <div class="filter-group">
+      <label class="form-label" for="typeFilter">Unit Type</label>
+      <select id="typeFilter">
+        <option value="">All Types</option>
+        <option value="Private Unit">Private Unit</option>
+        <option value="Shared Unit">Shared Unit</option>
+      </select>
+    </div>
     <div class="checkbox-group">
       <label><input type="checkbox" value="WiFi" class="amenity"> WiFi</label>
       <label><input type="checkbox" value="Kitchenette" class="amenity"> Kitchenette</label>
