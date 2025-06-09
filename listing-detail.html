@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Listing Details — GetNesty</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -22,6 +22,8 @@
     header {
       padding: 2rem 5%;
       background-color: var(--cream);
+      display: flex;
+      align-items: center;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
     header h1 {
@@ -43,20 +45,10 @@
       margin-bottom: 1rem;
     }
     .container h2 {
+      margin-top: 0;
       color: var(--green-dark);
     }
-    .amenities {
-      margin: 1rem 0;
-    }
-    .amenities span {
-      display: inline-block;
-      background-color: var(--green-light);
-      padding: 0.4rem 0.8rem;
-      margin: 0.25rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-    .footer {
+    footer {
       text-align: center;
       padding: 2rem;
       font-size: 0.9rem;
@@ -69,27 +61,33 @@
     <h1>GetNesty</h1>
   </header>
 
-  <div class="container" id="listingDetail"></div>
-
-  <div class="footer">
-    © 2025 GetNesty. All rights reserved.
+  <div class="container" id="listingDetail">
+    <p>Loading listing details...</p>
   </div>
+
+  <footer>
+    © 2025 GetNesty. All rights reserved.
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = 'https://cltsidymieorrgiwjuqm.supabase.co';
-    const SUPABASE_KEY = 'your-key-here';
+    const SUPABASE_KEY = 'your-key-here'; // use your actual anon key
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const urlParams = new URLSearchParams(window.location.search);
     const listingId = urlParams.get('id');
 
     async function loadListingDetail() {
-      const { data, error } = await supabase.from('Listings').select('*').eq('id', listingId).single();
       const container = document.getElementById('listingDetail');
+      const { data, error } = await supabase
+        .from('Listings')
+        .select('*')
+        .eq('id', listingId)
+        .single();
 
       if (error || !data) {
-        container.innerHTML = '<p>Error loading listing details.</p>';
+        container.innerHTML = `<p style="color: red;">Error loading listing details.</p>`;
         return;
       }
 
@@ -99,11 +97,9 @@
         <p><strong>Location:</strong> ${data.location}</p>
         <p><strong>Price:</strong> $${data.price}/month</p>
         <p><strong>Type:</strong> ${data.type}</p>
-        ${data.description ? `<p>${data.description}</p>` : ''}
-        <div class="amenities">
-          <strong>Amenities:</strong>
-          ${(data.amenities || '').split(',').map(a => `<span>${a.trim()}</span>`).join('')}
-        </div>
+        <p><strong>Amenities:</strong> ${data.amenities || 'Not listed'}</p>
+        <p><strong>Available:</strong> ${data.available_from || 'N/A'} to ${data.available_to || 'N/A'}</p>
+        <p><strong>Description:</strong> ${data.description || 'No description provided.'}</p>
       `;
     }
 
