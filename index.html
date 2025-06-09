@@ -9,57 +9,55 @@
     body {
       font-family: 'Inter', sans-serif;
       margin: 0;
-      padding: 0;
       background-color: #f9f7f3;
       color: #2e2e2e;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-      flex-direction: column;
     }
     header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
       padding: 1rem 2rem;
       background-color: #f9f7f3;
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #5a7d6c;
-      text-align: left;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    h1 {
+    header h1 {
+      margin: 0;
+    }
+    .hero {
+      background-color: #a4c3b2;
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .hero h2 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
     }
-    p {
+    .hero p {
       font-size: 1.2rem;
       margin-bottom: 2rem;
     }
-    .browse-btn {
-      display: inline-block;
+    .cta-button {
+      background-color: white;
+      color: #405c52;
+      border: none;
       padding: 0.75rem 1.5rem;
-      background-color: #5a7d6c;
-      color: white;
-      font-weight: 600;
-      text-decoration: none;
+      font-size: 1rem;
       border-radius: 8px;
-      transition: background-color 0.3s ease;
+      cursor: pointer;
+      font-weight: 600;
     }
-    .browse-btn:hover {
-      background-color: #476656;
+    .cta-button:hover {
+      background-color: #e7f0ed;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">GetNesty</div>
+    <h1>Get Nesty</h1>
   </header>
-  <h1>Welcome to GetNesty</h1>
-  <p>Find your next mid-term stay — curated, cozy, and convenient.</p>
-  <a href="listings.html" class="browse-btn">Browse Nests</a>
+
+  <section class="hero">
+    <h2>Stay longer. Settle in.</h2>
+    <p>Discover thoughtfully furnished spaces for mid-term stays—where comfort meets convenience. <br>Your next home away from home awaits.</p>
+    <a href="listings.html"><button class="cta-button">Browse Nests</button></a>
+  </section>
 </body>
 </html>
