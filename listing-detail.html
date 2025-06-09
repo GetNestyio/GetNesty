@@ -1,93 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Listing Details | GetNesty</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listing Details — GetNesty</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --cream: #f9f7f3;
+      --green-light: #cfe3dc;
+      --green-dark: #405c52;
+      --text-dark: #2e2e2e;
+    }
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f9f7f3;
+      background-color: var(--cream);
+      color: var(--text-dark);
       margin: 0;
       padding: 0;
-      color: #2e2e2e;
     }
     header {
-      background-color: #f9f7f3;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 2rem 5%;
+      background-color: var(--cream);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
     header h1 {
+      font-size: 2rem;
       margin: 0;
-      font-size: 1.75rem;
+      color: var(--green-dark);
     }
-    .detail-container {
+    .container {
       max-width: 800px;
       margin: 2rem auto;
-      padding: 1.5rem;
+      padding: 1rem;
       background: white;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
-    .detail-container h2 {
-      margin-top: 0;
-      font-size: 1.5rem;
-      color: #405c52;
-    }
-    .detail-container p {
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-    .detail-container img {
+    .container img {
       width: 100%;
-      height: auto;
       border-radius: 8px;
       margin-bottom: 1rem;
+    }
+    .container h2 {
+      color: var(--green-dark);
+    }
+    .amenities {
+      margin: 1rem 0;
+    }
+    .amenities span {
+      display: inline-block;
+      background-color: var(--green-light);
+      padding: 0.4rem 0.8rem;
+      margin: 0.25rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      color: #777;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Listing Details</h1>
+    <h1>GetNesty</h1>
   </header>
-  <div class="detail-container" id="listingDetail">
-    <!-- Listing details will appear here -->
+
+  <div class="container" id="listingDetail"></div>
+
+  <div class="footer">
+    © 2025 GetNesty. All rights reserved.
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = 'https://cltsidymieorrgiwjuqm.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsdHNpZHltaWVvcnJnaXdqdXFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxMDY3MjQsImV4cCI6MjA2MzY4MjcyNH0.soMMnW3-nRVH5onJPOETxRApevXuVDLDHbaT9_PS-Eo';
-
+    const SUPABASE_KEY = 'your-key-here';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function fetchListingDetail() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get('id');
-      const { data, error } = await supabase.from("Listings").select("*").eq("id", id).single();
+    const urlParams = new URLSearchParams(window.location.search);
+    const listingId = urlParams.get('id');
 
-      const container = document.getElementById("listingDetail");
+    async function loadListingDetail() {
+      const { data, error } = await supabase.from('Listings').select('*').eq('id', listingId).single();
+      const container = document.getElementById('listingDetail');
 
-      if (error) {
-        container.innerHTML = `<p>Error loading listing: ${error.message}</p>`;
+      if (error || !data) {
+        container.innerHTML = '<p>Error loading listing details.</p>';
         return;
       }
 
       container.innerHTML = `
-        ${data.image_url ? `<img src="${data.image_url}" alt="Property image">` : ''}
+        ${data.image_url ? `<img src="${data.image_url}" alt="Listing Image">` : ''}
         <h2>${data.title}</h2>
         <p><strong>Location:</strong> ${data.location}</p>
         <p><strong>Price:</strong> $${data.price}/month</p>
         <p><strong>Type:</strong> ${data.type}</p>
-        <p><strong>Beds:</strong> ${data.beds}</p>
-        <p><strong>Amenities:</strong> ${data.amenities}</p>
-        <p><strong>Host:</strong> ${data.host_name}</p>
-        <p>${data.host_bio}</p>
+        ${data.description ? `<p>${data.description}</p>` : ''}
+        <div class="amenities">
+          <strong>Amenities:</strong>
+          ${(data.amenities || '').split(',').map(a => `<span>${a.trim()}</span>`).join('')}
+        </div>
       `;
     }
 
-    fetchListingDetail();
+    loadListingDetail();
   </script>
 </body>
 </html>
