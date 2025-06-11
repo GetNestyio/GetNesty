@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Listing Details — GetNesty</title>
+  <title>Available Listings — GetNesty</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --cream: #f9f7f3;
+      --cream-dark: #ede9e0;
       --green-light: #cfe3dc;
       --green-dark: #405c52;
       --text-dark: #2e2e2e;
@@ -22,6 +23,8 @@
     header {
       padding: 2rem 5%;
       background-color: var(--cream);
+      display: flex;
+      align-items: center;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
     header h1 {
@@ -29,34 +32,68 @@
       margin: 0;
       color: var(--green-dark);
     }
-    .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 1rem;
+    .filters {
+      background-color: var(--cream);
+      padding: 1rem 2rem;
+      margin: 1rem 2rem;
+      border-radius: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: flex-end;
+    }
+    .filters label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 160px;
+    }
+    .filters input,
+    .filters select {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      flex: 1 1 100%;
+    }
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .listings {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+    .card {
       background: white;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      padding: 1rem;
     }
-    .container img {
+    .card img {
       width: 100%;
       border-radius: 8px;
       margin-bottom: 1rem;
     }
-    .container h2 {
+    .card h2 {
+      margin: 0 0 0.5rem;
+      font-size: 1.2rem;
       color: var(--green-dark);
     }
-    .amenities {
-      margin: 1rem 0;
-    }
-    .amenities span {
-      display: inline-block;
-      background-color: var(--green-light);
-      padding: 0.4rem 0.8rem;
-      margin: 0.25rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-    .footer {
+    footer {
       text-align: center;
       padding: 2rem;
       font-size: 0.9rem;
@@ -69,45 +106,115 @@
     <h1>GetNesty</h1>
   </header>
 
-  <div class="container" id="listingDetail"></div>
-
-  <div class="footer">
-    © 2025 GetNesty. All rights reserved.
+  <div class="filters">
+    <div class="filter-group">
+      <label for="locationFilter">Location</label>
+      <input type="text" id="locationFilter" placeholder="Search by location">
+    </div>
+    <div class="filter-group">
+      <label for="minPrice">Minimum Price</label>
+      <input type="number" id="minPrice" placeholder="Min price">
+    </div>
+    <div class="filter-group">
+      <label for="maxPrice">Maximum Price</label>
+      <input type="number" id="maxPrice" placeholder="Max price">
+    </div>
+    <div class="filter-group">
+      <label for="startDate">Move-in Date</label>
+      <input type="date" id="startDate" title="Move-in Date">
+    </div>
+    <div class="filter-group">
+      <label for="endDate">Move-out Date</label>
+      <input type="date" id="endDate" title="Move-out Date">
+    </div>
+    <div class="filter-group">
+      <label for="typeFilter">Unit Type</label>
+      <select id="typeFilter">
+        <option value="">All Types</option>
+        <option value="Private unit">Private unit</option>
+        <option value="Shared unit">Shared unit</option>
+      </select>
+    </div>
+    <div class="checkbox-group">
+      <label><input type="checkbox" value="WiFi" class="amenity">📶 Wi-Fi</label>
+      <label><input type="checkbox" value="Kitchenette" class="amenity">🍴 Kitchenette</label>
+      <label><input type="checkbox" value="Washer" class="amenity">🧺 Washer</label>
+      <label><input type="checkbox" value="Dryer" class="amenity">🌀 Dryer</label>
+      <label><input type="checkbox" value="TV" class="amenity">📺 TV</label>
+    </div>
+    <button onclick="applyFilters()">Filter</button>
   </div>
+
+  <div class="listings" id="listingsContainer"></div>
+
+  <footer>
+    © 2025 GetNesty. All rights reserved.
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = 'https://cltsidymieorrgiwjuqm.supabase.co';
-    const SUPABASE_KEY = 'your-key-here';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsdHNpZHltaWVvcnJnaXdqdXFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxMDY3MjQsImV4cCI6MjA2MzY4MjcyNH0.soMMnW3-nRVH5onJPOETxRApevXuVDLDHbaT9_PS-Eo';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const listingId = urlParams.get('id');
+    async function fetchListings(filters = {}) {
+      let query = supabase.from('Listings').select('*');
 
-    async function loadListingDetail() {
-      const { data, error } = await supabase.from('Listings').select('*').eq('id', listingId).single();
-      const container = document.getElementById('listingDetail');
+      if (filters.location) query = query.ilike('location', `%${filters.location}%`);
+      if (filters.type) query = query.eq('type', filters.type);
+      if (filters.minPrice) query = query.gte('price', filters.minPrice);
+      if (filters.maxPrice) query = query.lte('price', filters.maxPrice);
+      if (filters.startDate) query = query.gte('available_from', filters.startDate);
+      if (filters.endDate) query = query.lte('available_to', filters.endDate);
+      if (filters.amenities.length > 0) {
+        filters.amenities.forEach(amenity => {
+          query = query.ilike('amenities', `%${amenity}%`);
+        });
+      }
 
-      if (error || !data) {
-        container.innerHTML = '<p>Error loading listing details.</p>';
+      const { data, error } = await query;
+
+      const container = document.getElementById('listingsContainer');
+      container.innerHTML = '';
+
+      if (error) {
+        container.innerHTML = `<p>Error loading listings: ${error.message}</p>`;
         return;
       }
 
-      container.innerHTML = `
-        ${data.image_url ? `<img src="${data.image_url}" alt="Listing Image">` : ''}
-        <h2>${data.title}</h2>
-        <p><strong>Location:</strong> ${data.location}</p>
-        <p><strong>Price:</strong> $${data.price}/month</p>
-        <p><strong>Type:</strong> ${data.type}</p>
-        ${data.description ? `<p>${data.description}</p>` : ''}
-        <div class="amenities">
-          <strong>Amenities:</strong>
-          ${(data.amenities || '').split(',').map(a => `<span>${a.trim()}</span>`).join('')}
-        </div>
-      `;
+      if (data.length === 0) {
+        container.innerHTML = '<p>No listings found.</p>';
+        return;
+      }
+
+      data.forEach(listing => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          ${listing.image_url ? `<img src="${listing.image_url}" alt="Listing image">` : ''}
+          <h2>${listing.title}</h2>
+          <p><strong>Location:</strong> ${listing.location}</p>
+          <p><strong>Price:</strong> $${listing.price}/month</p>
+          <p><strong>Type:</strong> ${listing.type}</p>
+          <p><a href="listing-detail.html?id=${listing.id}">View Details</a></p>
+        `;
+        container.appendChild(card);
+      });
     }
 
-    loadListingDetail();
+    function applyFilters() {
+      const location = document.getElementById('locationFilter').value;
+      const minPrice = document.getElementById('minPrice').value;
+      const maxPrice = document.getElementById('maxPrice').value;
+      const type = document.getElementById('typeFilter').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const amenities = Array.from(document.querySelectorAll('.amenity:checked')).map(cb => cb.value);
+
+      fetchListings({ location, minPrice, maxPrice, type, startDate, endDate, amenities });
+    }
+
+    fetchListings();
   </script>
 </body>
 </html>
