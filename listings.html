@@ -158,6 +158,7 @@
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function fetchListings(filters = {}) {
+      console.log("Filters received:", filters);
       console.log("Applied filters:", filters);
 
   let query = supabase.from('Listings').select('*');
@@ -220,6 +221,16 @@
     }
 
     fetchListings({});
+    fetchListings({
+      location: '',
+      minPrice: '',
+      maxPrice: '',
+      type: '',
+      startDate: '',
+      endDate: '',
+      amenities: []
+    });
+
   </script>
 </body>
 </html>
