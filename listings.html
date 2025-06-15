@@ -158,52 +158,51 @@
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function fetchListings(filters = {}) {
-      let query = supabase.from('Listings').select('*');
+  let query = supabase.from('Listings').select('*');
 
-      if (filters.location) query = query.ilike('location', `%${filters.location}%`);
-      if (filters.type) query = query.eq('type', filters.type);
-      if (filters.minPrice) query = query.gte('price', filters.minPrice);
-      if (filters.maxPrice) query = query.lte('price', filters.maxPrice);
-      if (filters.startDate) query = query.gte('available_from', filters.startDate);
-      if (filters.endDate) query = query.lte('available_to', filters.endDate);
-      if (filters.amenities.length > 0) {
-        filters.amenities.forEach(amenity => {
-          query = query.ilike('amenities', `%${amenity}%`);
-        });
-      }
+  if (filters.location) query = query.ilike('location', `%${filters.location}%`);
+  if (filters.type) query = query.eq('type', filters.type);
+  if (filters.minPrice) query = query.gte('price', filters.minPrice);
+  if (filters.maxPrice) query = query.lte('price', filters.maxPrice);
 
-      const { data, error } = await query;
+  // ✅ These filters will only apply if the columns exist and values are provided
+  if (filters.startDate) query = query.gte('available_from', filters.startDate);
+  if (filters.endDate) query = query.lte('available_to', filters.endDate);
 
-      console.log("Filters used:", filters);
-      console.log("Supabase query result:", { data, error });
+  if (filters.amenities.length > 0) {
+    filters.amenities.forEach(amenity => {
+      query = query.ilike('amenities', `%${amenity}%`);
+    });
+  }
 
+  const { data, error } = await query;
 
-      const container = document.getElementById('listingsContainer');
-      container.innerHTML = '';
+  const container = document.getElementById('listingsContainer');
+  container.innerHTML = '';
 
-    if (error || !data) {
-  container.innerHTML = `<p>Error loading listings: ${error?.message || "Unknown error"}</p>`;
-  return;
-}
+  if (error) {
+    container.innerHTML = `<p>Error loading listings: ${error.message}</p>`;
+    return;
+  }
 
-if (Array.isArray(data) && data.length === 0) {
-  container.innerHTML = '<p>No listings found.</p>';
-  return;
-}
+  if (!data || data.length === 0) {
+    container.innerHTML = '<p>No listings found.</p>';
+    return;
+  }
 
-      data.forEach(listing => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          ${listing.image_url ? `<img src="${listing.image_url}" alt="Listing image">` : ''}
-          <h2>${listing.title}</h2>
-          <p><strong>Location:</strong> ${listing.location}</p>
-          <p><strong>Price:</strong> $${listing.price}/month</p>
-          <p><strong>Type:</strong> ${listing.type}</p>
-          <p><a href="listing-detail.html?id=${listing.id}">View Details</a></p>
-        `;
-        container.appendChild(card);
-      });
+  data.forEach(listing => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      ${listing.image_url ? `<img src="${listing.image_url}" alt="Listing image">` : ''}
+      <h2>${listing.title}</h2>
+      <p><strong>Location:</strong> ${listing.location}</p>
+      <p><strong>Price:</strong> $${listing.price}/month</p>
+      <p><strong>Type:</strong> ${listing.type}</p>
+      <p><a href="listing-detail.html?id=${listing.id}">View Details</a></p>
+    `;
+    container.appendChild(card);
+  });
     }
 
     function applyFilters() {
