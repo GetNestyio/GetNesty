@@ -158,17 +158,16 @@
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function fetchListings(filters = {}) {
+      console.log("Applied filters:", filters);
+
   let query = supabase.from('Listings').select('*');
 
   if (filters.location) query = query.ilike('location', `%${filters.location}%`);
   if (filters.type) query = query.eq('type', filters.type);
   if (filters.minPrice) query = query.gte('price', filters.minPrice);
   if (filters.maxPrice) query = query.lte('price', filters.maxPrice);
-
-  // ✅ These filters will only apply if the columns exist and values are provided
   if (filters.startDate) query = query.gte('available_from', filters.startDate);
   if (filters.endDate) query = query.lte('available_to', filters.endDate);
-
   if (filters.amenities.length > 0) {
     filters.amenities.forEach(amenity => {
       query = query.ilike('amenities', `%${amenity}%`);
@@ -176,6 +175,9 @@
   }
 
   const { data, error } = await query;
+      
+  console.log("Fetched listings:", data);
+  console.log("Fetch error (if any):", error);
 
   const container = document.getElementById('listingsContainer');
   container.innerHTML = '';
