@@ -217,10 +217,10 @@
       const endDate = document.getElementById('endDate').value;
       const amenities = Array.from(document.querySelectorAll('.amenity:checked')).map(cb => cb.value);
 
+           console.log("Filters received:", { location, minPrice, maxPrice, type, startDate, endDate, amenities });
       fetchListings({ location, minPrice, maxPrice, type, startDate, endDate, amenities });
-    }
 
-    console.log("Applied filters:", { ... })
+    // Initial fetch to show listings
     
     fetchListings({
       location: '',
