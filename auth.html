@@ -25,16 +25,32 @@
       max-width: 400px;
       width: 100%;
     }
+    .auth-links {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #555;
+      text-align: center;
+    }
+.auth-links a {
+  display: block;
+  margin-top: 0.5rem;
+  color: #405c52;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
     h2 {
       text-align: center;
     }
     input {
       width: 100%;
       padding: 0.75rem;
-      margin: 0.5rem 0;
-      border-radius: 6px;
       border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
     }
+
     button {
       width: 100%;
       padding: 0.75rem;
@@ -57,9 +73,9 @@
     <h2>GetNesty Auth</h2>
     <input type="email" id="email" placeholder="Email" required />
     <input type="password" id="password" placeholder="Password" required />
-    <button onclick="signUp()">Sign Up</button>
     <button onclick="logIn()">Log In</button>
-    <button onclick="logOut()">Log Out</button>
+      <a id="showSignup">Not yet a Nester? Sign up</a>
+      <a href="#">Forgot Username or Password?</a>
     <div id="user-info"></div>
   </div>
 
@@ -99,4 +115,10 @@
     showUser();
   </script>
 </body>
+  <script>
+    document.getElementById('showSignup').addEventListener('click', () => {
+      window.location.href = 'signup.html'; // Create this page next
+    });
+</script>
+
 </html>
