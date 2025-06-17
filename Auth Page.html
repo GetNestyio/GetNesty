@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login / Sign Up | GetNesty</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9f7f3;
+      color: #2e2e2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .auth-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      max-width: 400px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      background-color: #405c52;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #user-info {
+      margin-top: 1rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <h2>GetNesty Auth</h2>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="logIn()">Log In</button>
+    <button onclick="logOut()">Log Out</button>
+    <div id="user-info"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://cltsidymieorrgiwjuqm.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsdHNpZHltaWVvcnJnaXdqdXFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxMDY3MjQsImV4cCI6MjA2MzY4MjcyNH0.soMMnW3-nRVH5onJPOETxRApevXuVDLDHbaT9_PS-Eo';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function signUp() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      showUser();
+      alert(error ? error.message : 'Check your email to confirm sign-up.');
+    }
+
+    async function logIn() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      showUser();
+      alert(error ? error.message : 'Logged in!');
+    }
+
+    async function logOut() {
+      const { error } = await supabase.auth.signOut();
+      document.getElementById('user-info').innerText = '';
+      alert(error ? error.message : 'Logged out!');
+    }
+
+    async function showUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+      document.getElementById('user-info').innerText = user ? `Logged in as: ${user.email}` : '';
+    }
+
+    showUser();
+  </script>
+</body>
+</html>
