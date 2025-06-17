@@ -70,11 +70,11 @@
 </head>
 <body>
   <div class="auth-container">
-    <h2>GetNesty Auth</h2>
+    <h2>GetNesty Account</h2>
     <input type="email" id="email" placeholder="Email" required />
     <input type="password" id="password" placeholder="Password" required />
     <button onclick="logIn()">Log In</button>
-      <a id="showSignup">Not yet a Nester? Sign up</a>
+      <a href="signup.html">Not yet a Nester? Sign up</a>
       <a href="#">Forgot Username or Password?</a>
     <div id="user-info"></div>
   </div>
@@ -116,9 +116,7 @@
   </script>
 </body>
   <script>
-    document.getElementById('showSignup').addEventListener('click', () => {
-      window.location.href = 'signup.html'; // Create this page next
-    });
+  
 </script>
 
 </html>
