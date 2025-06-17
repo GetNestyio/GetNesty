@@ -35,6 +35,7 @@
       border-radius: 6px;
       border: 1px solid #ccc;
       font-size: 1rem;
+      box-sizing: border-box;
     }
     button {
       width: 100%;
@@ -46,6 +47,7 @@
       border-radius: 6px;
       font-weight: 600;
       cursor: pointer;
+      font-size: 1rem;
     }
     #user-info {
       margin-top: 1rem;
@@ -79,7 +81,8 @@
     <input type="password" id="password" placeholder="Password" required />
     <button onclick="logIn()">Log In</button>
     <div class="auth-links">
-      <span>Not yet a Nester? <a id="showSignup">Sign up</a></span>
+      <span>Not yet a Nester?</span>
+      <a id="showSignup">Sign up</a>
       <a href="#">Forgot Username or Password?</a>
     </div>
     <div id="user-info"></div>
@@ -117,10 +120,4 @@
     showUser();
   </script>
 </body>
-</html>
-
-  <script>
-  
-</script>
-
 </html>
