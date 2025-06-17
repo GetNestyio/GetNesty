@@ -31,13 +31,21 @@
       color: #555;
       text-align: center;
     }
-.auth-links a {
-  display: block;
-  margin-top: 0.5rem;
-  color: #405c52;
-  text-decoration: underline;
-  cursor: pointer;
-}
+    .auth-links span{
+      display: block;
+      margin-top: 0.5rem;
+      color: #2e232e;
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight:500;
+    }
+    .auth-links a {
+      display: block;
+      margin-top: 0.5rem;
+      color: #405c52;
+      text-decoration: underline;
+      cursor: pointer;
+    }
 
     h2 {
       text-align: center;
@@ -74,8 +82,8 @@
     <input type="email" id="email" placeholder="Email" required />
     <input type="password" id="password" placeholder="Password" required />
     <button onclick="logIn()">Log In</button>
-      <a href="signup.html">Not yet a Nester? Sign up</a>
-      <a href="#">Forgot Username or Password?</a>
+    <span>Not yet a Nester? <a id="showSignup">Sign up</a></span>
+    <a href="#">Forgot Username or Password?</a>
     <div id="user-info"></div>
   </div>
 
