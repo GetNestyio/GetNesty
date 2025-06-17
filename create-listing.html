@@ -54,6 +54,10 @@
     <label>Price (per month)</label>
     <input type="number" name="price" required />
     <label>Type</label>
+    <label>Move-in Date</label>
+    <input type="date" name="available_from" required />
+    <label>Move-out Date</label>
+    <input type="date" name="available_to" required />
     <input type="text" name="type" required />
     <label>Number of Beds</label>
     <input type="text" name="beds" required />
@@ -100,6 +104,8 @@
         title: formData.get('title'),
         location: formData.get('location'),
         price: formData.get('price'),
+        available_from: formData.get('available_from'),
+        available_to: formData.get('available_to'),
         type: formData.get('type'),
         beds: formData.get('beds'),
         amenities: formData.get('amenities'),
