@@ -25,40 +25,17 @@
       max-width: 400px;
       width: 100%;
     }
-    .auth-links {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: #555;
-      text-align: center;
-    }
-    .auth-links span{
-      display: block;
-      margin-top: 0.5rem;
-      color: #2e232e;
-      text-decoration: underline;
-      cursor: pointer;
-      font-weight:500;
-    }
-    .auth-links a {
-      display: block;
-      margin-top: 0.5rem;
-      color: #405c52;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
     h2 {
       text-align: center;
     }
     input {
       width: 100%;
       padding: 0.75rem;
-      border: 1px solid #ccc;
+      margin: 0.5rem 0;
       border-radius: 6px;
-      margin-bottom: 1rem;
+      border: 1px solid #ccc;
       font-size: 1rem;
     }
-
     button {
       width: 100%;
       padding: 0.75rem;
@@ -74,16 +51,37 @@
       margin-top: 1rem;
       text-align: center;
     }
+    .auth-links {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #555;
+      text-align: center;
+    }
+    .auth-links span {
+      display: block;
+      margin-top: 0.5rem;
+      font-weight: 500;
+      color: #2e2e2e;
+    }
+    .auth-links a {
+      display: block;
+      margin-top: 0.5rem;
+      color: #405c52;
+      text-decoration: underline;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <div class="auth-container">
-    <h2>GetNesty Account</h2>
+    <h2>GetNesty Auth</h2>
     <input type="email" id="email" placeholder="Email" required />
     <input type="password" id="password" placeholder="Password" required />
     <button onclick="logIn()">Log In</button>
-    <span>Not yet a Nester? <a id="showSignup">Sign up</a></span>
-    <a href="#">Forgot Username or Password?</a>
+    <div class="auth-links">
+      <span>Not yet a Nester? <a id="showSignup">Sign up</a></span>
+      <a href="#">Forgot Username or Password?</a>
+    </div>
     <div id="user-info"></div>
   </div>
 
@@ -92,14 +90,6 @@
     const SUPABASE_URL = 'https://cltsidymieorrgiwjuqm.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsdHNpZHltaWVvcnJnaXdqdXFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxMDY3MjQsImV4cCI6MjA2MzY4MjcyNH0.soMMnW3-nRVH5onJPOETxRApevXuVDLDHbaT9_PS-Eo';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    async function signUp() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const { data, error } = await supabase.auth.signUp({ email, password });
-      showUser();
-      alert(error ? error.message : 'Check your email to confirm sign-up.');
-    }
 
     async function logIn() {
       const email = document.getElementById('email').value;
@@ -120,9 +110,15 @@
       document.getElementById('user-info').innerText = user ? `Logged in as: ${user.email}` : '';
     }
 
+    document.getElementById('showSignup').addEventListener('click', () => {
+      window.location.href = 'signup.html';
+    });
+
     showUser();
   </script>
 </body>
+</html>
+
   <script>
   
 </script>
