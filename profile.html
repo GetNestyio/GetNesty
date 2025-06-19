@@ -29,36 +29,28 @@
       align-items: center;
       margin-bottom: 1rem;
     }
-
-    #profileImage {
+    .profile-image-wrapper img {
       width: 120px;
       height: 120px;
       border-radius: 50%;
       object-fit: cover;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
-
-    #uploadPhoto {
-      font-size: 0.9rem;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      background-color: #f2f2f2;
-      cursor: pointer;
-    }
-
-    .custom-upload-button {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.6rem 1.2rem;
+    .upload-label {
       background-color: #405c52;
       color: white;
+      padding: 0.5rem 1.25rem;
       border-radius: 6px;
       font-weight: 600;
       cursor: pointer;
-      font-size: 0.95rem;
       text-align: center;
+      display: inline-block;
     }
+
+    #uploadPhoto {
+      display: none;
+    }
+
     .info {
       text-align: center;
       margin-bottom: 1.5rem;
@@ -86,11 +78,9 @@
     <h2>Nesty Profile</h2>
     <div class="profile-image-wrapper">
       <img id="profileImage" src="default-profile.png" alt="Profile Picture" />
+      <label for="uploadPhoto" class+"upload-label">Upload Picture</label>
       <input type="file" id="uploadPhoto" accept="image/*" />
     </div>
-
-  <label for="uploadPhoto" class="custom-upload-button">Upload Picture</label>
-  <input type="file" id="uploadPhoto" accept="image/*" style="display: none;" />
 
     <div class="info">
       <p><strong>Email:</strong> <span id="userEmail"></p>
