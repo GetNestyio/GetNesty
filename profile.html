@@ -34,6 +34,18 @@
       border-radius: 50%;
       object-fit: cover;
     }
+    .custom-upload-button {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      background-color: #405c52;
+      color: white;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+      text-align: center;
+    }
     .info {
       text-align: center;
       margin-bottom: 1.5rem;
@@ -59,10 +71,12 @@
 <body>
   <div class="container">
     <h2>Nesty Profile</h2>
-    <div class="profile-pic">
-     <img id="profileImage" src="default-profile.png" alt="Profile Picture" style="width: 120px; height: 120px; border-radius: 50%;">
-    </div>
-    <input type="file" id="uploadPhoto" accept="image/*" />
+  <div class="profile-pic">
+    <img id="profileImage" src="default-profile.png" alt="Profile Picture" style="width: 120px; height: 120px; border-radius: 50%;">
+  </div>
+
+  <label for="uploadPhoto" class="custom-upload-button">Upload Picture</label>
+  <input type="file" id="uploadPhoto" accept="image/*" style="display: none;" />
 
     <div class="info">
       <p><strong>Email:</strong> <span id="userEmail"></p>
@@ -111,6 +125,18 @@
     }
 
     loadProfile();
+    // Preview image on upload
+    document.getElementById('uploadPhoto').addEventListener('change', function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('profileImage').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
   </script>
 </body>
 </html>
