@@ -77,11 +77,18 @@
       margin: 1rem auto;
     }
     .profile-section {
-      text-align: center;
       margin-top: 1.5rem;
     }
+    .left-align {
+      text-align: left;
+    }
 
-    .profile-section textarea,
+    .profile-section label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
     .profile-section input {
       width: 100%;
       max-width: 600px;
@@ -89,7 +96,6 @@
       border-radius: 6px;
       border: 1px solid #ccc;
       font-size: 1rem;
-      margin-top: 0.5rem;
     }
 
   .section-title {
@@ -113,15 +119,15 @@
     <p><strong>Email:</strong> <span id="userEmail"></span></p>
   </div>
 
-  <div class="profile-section">
-    <h3 class="section-title">About You</h3>
-    <textarea id="aboutText" rows="4" placeholder="Tell us a bit about yourself..."></textarea>
-  </div>
+    <div class="profile-section left-align">
+      <label for="aboutText">About You</label>
+      <input type="text" id="aboutText" placeholder="Tell us a bit about yourself..." />
+    </div>
 
-  <div class="profile-section">
-    <h3 class="section-title">🌍 Homebase</h3>
-    <input type="text" placeholder="Enter your city or region" id="homebase" />
-  </div>
+    <div class="profile-section left-align">
+      <label for="homebase">🌍 Homebase</label>
+      <input type="text" id="homebase" placeholder="Enter your city or region" />
+    </div>
 
     <div class="section">
       <h3>Your Listings</h3>
