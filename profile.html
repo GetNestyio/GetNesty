@@ -225,37 +225,36 @@
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         alert('Not logged in');
-        return;
-      }
+      return;
+  }
 
-      let profileImageUrl = null;
+  let profileImageUrl = null;
 
-      if (file) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${user.id}_${Date.now()}.${fileExt}`;
-        const filePath = `profile-images/${fileName}`;
+  if (file) {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${user.id}_${Date.now()}.${fileExt}`;
+    const filePath = `profile-images/${fileName}`;
 
-        const { error: uploadError } = await supabase.storage
-          .from('profile-images')
-          .upload(filePath, file);
+    const { error: uploadError } = await supabase.storage
+      .from('profile-images')
+      .upload(filePath, file);
 
     if (uploadError) {
-        alert('Image upload failed!');
-        return;
+      alert('Image upload failed!');
+      return;
     }
 
-   const { data } = supabase.storage
-    .from('profile-images')
-    .getPublicUrl(filePath);
+    const { data } = supabase.storage
+      .from('profile-images')
+      .getPublicUrl(filePath);
 
-  profileImageUrl = data.publicUrl;
-
+    profileImageUrl = data.publicUrl;
   }
 
   const { error: updateError } = await supabase
     .from('Profiles')
     .upsert({
-      id: user.id,  // This should match the UUID in auth.users
+      id: user.id,
       about,
       homebase,
       first_name: firstName,
@@ -271,19 +270,7 @@
   }
 });
 
-    .upsert({
-      id: user.id,
-      about,
-      homebase,
-      profile_image_url: profileImageUrl
-    });
 
-  if (updateError) {
-    alert('Failed to update profile');
-  } else {
-    alert('Profile saved!');
-  }
-});
 
 
       // Get listings for this user
