@@ -189,16 +189,72 @@
     async function loadProfile() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      document.getElementById('userEmail').textContent = user.email;
+     document.getElementById('userEmail').textContent = user.email;
+
+  const { data: profile } = await supabase
+    .from('Profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+
+  if (profile) {
+    document.getElementById('aboutText').value = profile.about || '';
+    document.getElementById('homebase').value = profile.homebase || '';
+    if (profile.profile_image_url) {
+      document.getElementById('profileImage').src = profile.profile_image_url;
+  }
+}
 
     document.getElementById('saveProfileBtn').addEventListener('click', async () => {
-      const aboutText = document.getElementById('aboutText').value;
-      const homebase = document.querySelector('input[placeholder="Enter your city or region"]').value;
+      const about = document.getElementById('aboutText').value;
+      const homebase = document.getElementById('homebase').value;
+      const file = document.getElementById('uploadPhoto').files[0];
 
-      // Placeholder: wire up Supabase update logic here
-      console.log('Saving profile:', { aboutText, homebase });
-      alert('Profile saved (functionality coming soon)');
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    alert('Not logged in');
+    return;
+  }
+
+  let profileImageUrl = null;
+
+  if (file) {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${user.id}_${Date.now()}.${fileExt}`;
+    const filePath = `profile-images/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('profile-images')
+      .upload(filePath, file);
+
+    if (uploadError) {
+      alert('Image upload failed!');
+      return;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from('profile-images')
+      .getPublicUrl(filePath);
+
+    profileImageUrl = publicUrlData.publicUrl;
+  }
+
+  const { error: updateError } = await supabase
+    .from('Profiles')
+    .upsert({
+      id: user.id,
+      about,
+      homebase,
+      profile_image_url: profileImageUrl
     });
+
+  if (updateError) {
+    alert('Failed to update profile');
+  } else {
+    alert('Profile saved!');
+  }
+});
+
 
       // Get listings for this user
       const { data: listings } = await supabase.from('Listings').select('*').eq('email', user.email);
