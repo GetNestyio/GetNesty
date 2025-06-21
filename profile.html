@@ -62,7 +62,10 @@
       border-radius: 6px;
       border: 1px solid #ccc;
       font-size: 1rem;
-      resize: none; /* prevents drag-to-expand */
+      resize: none; 
+      background-color: #fff;
+      box-sizing: border-box;
+      font-family: 'Inter", sans-serif;
   }
 
     .info {
@@ -109,6 +112,17 @@
       box-sizing: border-box;
     }
 
+    .button#saveProfileBtn {
+      padding: 0.75rem 1.5rem;
+      background-color: #405c52;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
   .section-title {
       font-size: 1.1rem;
       font-weight: 600;
@@ -139,6 +153,10 @@
       <label for="homebase">🌍 Homebase</label>
       <input type="text" id="homebase" placeholder="Enter your city or region" />
     </div>
+   
+    <div style="margin-top: 1.5rem; text-align: center;">
+      <button id="saveProfileBtn">Save Profile</button>
+    </div>
 
     <div class="section">
       <h3>Your Listings</h3>
@@ -156,6 +174,15 @@
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       document.getElementById('userEmail').textContent = user.email;
+
+    document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+      const aboutText = document.getElementById('aboutText').value;
+      const homebase = document.querySelector('input[placeholder="Enter your city or region"]').value;
+
+      // Placeholder: wire up Supabase update logic here
+      console.log('Saving profile:', { aboutText, homebase });
+      alert('Profile saved (functionality coming soon)');
+    });
 
       // Get listings for this user
       const { data: listings } = await supabase.from('Listings').select('*').eq('email', user.email);
