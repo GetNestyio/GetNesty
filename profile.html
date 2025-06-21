@@ -244,11 +244,12 @@
         return;
     }
 
-    const { data: publicUrlData } = supabase.storage
-      .from('profile-images')
-      .getPublicUrl(filePath);
+   const { data } = supabase.storage
+    .from('profile-images')
+    .getPublicUrl(filePath);
 
-    profileImageUrl = publicUrlData.publicUrl;
+  profileImageUrl = data.publicUrl;
+
   }
 
   const { error: updateError } = await supabase
