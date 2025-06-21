@@ -55,6 +55,15 @@
     display: none;
   }
 
+    .profile-section textarea {
+      width: 100%;
+      max-width: 600px;
+      padding: 0.6rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      resize: none; /* prevents drag-to-expand */
+  }
 
     .info {
       text-align: center;
@@ -119,9 +128,9 @@
     <p><strong>Email:</strong> <span id="userEmail"></span></p>
   </div>
 
-    <div class="profile-section left-align">
+     <div class="profile-section left-align">
       <label for="aboutText">About You</label>
-      <input type="text" id="aboutText" placeholder="Tell us a bit about yourself..." />
+      <textarea id="aboutText" placeholder="Tell us a bit about yourself..." rows="4"></textarea>
     </div>
 
     <div class="profile-section left-align">
